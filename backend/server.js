@@ -11,7 +11,7 @@ const app = express();
 // ─── CORS ────────────────────────────────────────────────────────────────────
 const allowedOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(',').map((o) => o.trim())
-  : ['http://localhost:5173', 'http://localhost:3000'];
+  : ['https://auth-token-ye6w.vercel.app', 'http://localhost:3000'];
 
 app.use(
   cors({
@@ -42,7 +42,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: process.env.API_URL || 'http://localhost:5000',
+        url: process.env.API_URL || 'https://auth-token-update.onrender.com',
         description: 'Active Server',
       },
     ],
