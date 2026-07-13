@@ -15,7 +15,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/login', formData);
+      const res = await axios.post('/api/login', formData);
       Cookies.set('token', res.data.token, { expires: 1 });
       toast.success('Login successful!');
       navigate('/dashboard');

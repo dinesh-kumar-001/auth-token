@@ -1,52 +1,64 @@
-name: Deploy Vite App
+name: CI — Build & Test
 
 on:
   push:
-    branches:
-      - main
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  build:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Backend: install & syntax check
+  # ─────────────────────────────────────────────────────────────────────────────
+  backend:
+    name: Backend — Install & Check
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
-        run: |
-          cd frontend
-          npm install
+        run: npm ci
 
-      - name: Build
-        run: |
-          cd frontend
-          npm run build
+      - name: Syntax check
+        run: node --check server.js routes/auth.js middleware/auth.js models/User.js
 
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: frontend/dist
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Frontend: install & build
+  # ─────────────────────────────────────────────────────────────────────────────
+  frontend:
+    name: Frontend — Install & Build
     runs-on: ubuntu-latest
-    needs: build
+    defaults:
+      run:
+        working-directory: frontend
 
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
