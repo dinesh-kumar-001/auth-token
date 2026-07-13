@@ -25,6 +25,7 @@ A full-stack MERN (MongoDB · Express · React · Node.js) application with:
 │   │   ├── Register.jsx
 │   │   └── Dashboard.jsx
 │   ├── vite.config.js         # Dev proxy → /api → localhost:5000
+│   ├── .env.example           # Environment variable template
 │   └── package.json
 ├── .github/workflows/
 │   └── deploy.yml             # CI: build + syntax check backend & frontend
@@ -64,11 +65,18 @@ npm run dev                   # starts with nodemon on port 5000
 
 ```bash
 cd frontend
+cp .env.example .env          # optional: set custom VITE_API_URL
 npm install
 npm run dev                   # Vite dev server on http://localhost:5173
 ```
 
-> All `/api` calls from the frontend are proxied to `http://localhost:5000` automatically (configured in `vite.config.js`).
+**`frontend/.env` variables:**
+
+| Variable       | Description                                                                                                    |
+|----------------|----------------------------------------------------------------------------------------------------------------|
+| `VITE_API_URL` | Public URL of the backend (e.g. `https://auth-token-1x6w.onrender.com`). Leave blank to use dev proxy/same-origin. |
+
+> All `/api` calls from the frontend are dynamically resolved. If `VITE_API_URL` is set, it queries that host. If left blank, it falls back to relative routes (proxied to `http://localhost:5000` via `vite.config.js` in development, or routed automatically by Vercel in production).
 
 ---
 
@@ -91,7 +99,7 @@ Start the backend, then open:
 ## ☁️ Deploying to Vercel
 
 1. **Set environment variables** in your Vercel project dashboard:  
-   `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `API_URL`
+   `MONGO_URI`, `JWT_SECRET`, `CLIENT_URL`, `API_URL` (for backend services), and `VITE_API_URL` (pointing to your Render URL if deploying backend separately).
 
 2. **Import** your GitHub repo into Vercel — it will pick up `vercel.json` automatically.
 
