@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
-    <BrowserRouter basename="/auth-token">
+    <BrowserRouter basename="/">
       <ToastContainer position="top-right" autoClose={3000} />
 
       <Routes>
