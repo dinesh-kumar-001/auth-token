@@ -62,7 +62,15 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
+// ─── ROOT & HEALTH CHECK ──────────────────────────────────────────────────────
+app.get('/', (_req, res) =>
+  res.status(200).json({
+    message: 'MERN Auth API is running.',
+    docs: '/api-docs',
+    health: '/health',
+  })
+);
+
 app.get('/health', (_req, res) =>
   res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() })
 );
@@ -91,7 +99,7 @@ mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ MongoDB connected');
-    const server = app.listen(PORT, () =>
+    const server = app.listen(PORT, '0.0.0.0', () =>
       console.log(`🚀 Server running on port ${PORT}`)
     );
 
