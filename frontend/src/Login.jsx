@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from './api';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import { useNavigate, Link } from 'react-router-dom';
@@ -15,7 +15,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/login', formData);
+      const res = await api.post('/api/login', formData);
       Cookies.set('token', res.data.token, { expires: 1 });
       toast.success('Login successful!');
       navigate('/dashboard');

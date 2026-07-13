@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from './api';
 import { toast } from 'react-toastify';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -20,7 +20,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/register', formData);
+      const res = await api.post('/api/register', formData);
       toast.success(res.data.message);
       navigate('/');
     } catch (err) {

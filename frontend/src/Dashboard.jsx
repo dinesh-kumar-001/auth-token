@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from './api';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +17,7 @@ function Dashboard() {
       }
 
       try {
-        const res = await axios.get('/api/profile', {
+        const res = await api.get('/api/profile', {
           headers: {
             Authorization: `Bearer ${token}` 
           }
